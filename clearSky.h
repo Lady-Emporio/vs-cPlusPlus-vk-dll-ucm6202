@@ -24,7 +24,7 @@ inline void myLog(std::string text) {
 	std::wstring messageW(text.begin(), text.end());
 	WCHAR_T* wsData = messageW.data();
 
-	std::string LOG_FILE_PATH = "C:/log.txt";
+	std::string LOG_FILE_PATH = "E:/log_ucm6202.txt";
 	std::ofstream outfile;
 
 	SYSTEMTIME st;

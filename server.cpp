@@ -68,6 +68,32 @@ void foreverListener(IAddInDefBase* eventMen, std::string ip, int port, std::str
 	}
 	std::string message="";
 	while (1) {
+
+		struct timeval tv;
+		tv.tv_sec = 60;
+		tv.tv_usec = 0;
+
+		fd_set readfds;
+		FD_ZERO(&readfds);
+		FD_SET(_s, &readfds);
+		myLog("select begin");
+		int result = select(
+			NULL,
+			&readfds,
+			NULL,
+			NULL,
+			&tv
+		);
+		if (SOCKET_ERROR == result) {
+			myLog("Select error");
+			return;
+		}
+		if (0 == result) {
+			myLog("timeout" + std::to_string(result));
+			return;
+		}
+		myLog("select check"+std::to_string(result));
+
 		char buf[400 * 8 * 2];
 		int byte_count;
 		byte_count = recv(_s, buf, sizeof(buf)-1, 0);
@@ -114,7 +140,7 @@ void runListen(IAddInDefBase* eventMen, std::string ip, int port, std::string us
 	std::thread thread(threadMain, eventMen, ip,port,user,password);
 	thread.detach();
 	//thread.join();
-	myLog("dll close.");
+	myLog("thread.detach run.");
 }
 
 
